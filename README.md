@@ -112,7 +112,7 @@ pnpm build
 # 产物在 out/
 ```
 
-将 `out/` 目录拷到 Windows，用本地 HTTP 服务打开（不要直接 `file://`）：
+将 `out/` 目录拷到 Windows，用本地 HTTP 服务打开：
 
 ```cmd
 cd out
@@ -127,31 +127,19 @@ npx serve .
 
 复制 `.env.local.example` 为 `.env.local`：
 
-| 变量 | 说明 | 默认 |
-|------|------|------|
+| 变量                    | 说明                     | 默认   |
+| ----------------------- | ------------------------ | ------ |
 | `NEXT_PUBLIC_DATA_MODE` | `mock` / `live` / `auto` | `mock` |
-| `NEXT_PUBLIC_STATUS_API_URL` | API 地址（Tailscale IP） | `http://100.67.173.13:3000/status` |
-| `NEXT_PUBLIC_HOST_NAME` | 面板显示的主机名 | `homelab` |
 
 ### 数据模式
 
-| 模式 | 行为 |
-|------|------|
+| 模式   | 行为                                 |
+| ------ | ------------------------------------ |
 | `mock` | 本地假数据，不轮询，右上角徽章 `DEV` |
-| `live` | 只拉真实 API，失败显示 `OFF` |
+| `live` | 只拉真实 API，失败显示 `OFF`         |
 | `auto` | 先 fetch，失败回退 mock 并标记 `OFF` |
 
-改 `.env.local` 后需重启 `pnpm dev`；`pnpm build` 前也需确认配置。
-
-### 网络注意（WSL 开发）
-
-| 环境 | API 地址 |
-|------|----------|
-| WSL 终端 `curl` | `http://localhost:3000/status` ✅ |
-| Windows 浏览器 / WE | `http://<tailscale-ip>:3000/status` ✅ |
-| Windows 浏览器 `localhost:3000` | ❌ 到不了 WSL 里的 API |
-
----
+## 改 `.env.local` 后需重启 `pnpm dev`；`pnpm build` 前也需确认配置。
 
 ## API 数据契约
 
@@ -170,7 +158,7 @@ npx serve .
 后端仓库路径（独立维护）：
 
 ```text
-/Project/infra/server/node-for-wallpaper/server/
+[/Project/infra/server/node-for-wallpaper-server/](https://github.com/DataEntity/personal-uptime-server)
 ```
 
 ---
@@ -200,13 +188,13 @@ const homelab = getAppStatusConfig();
 const vps = {
   ...homelab,
   hostName: "vps",
-  apiUrl: "http://100.x.x.x:3000/status",
+  apiUrl: "http://<tailscale-ip>:<port>/status",
 };
 
 <HudColumn>
   <ServerStatusWidget config={homelab} />
   <ServerStatusWidget config={vps} />
-</HudColumn>
+</HudColumn>;
 ```
 
 每台机器一个 `ServerStatusWidget` 实例，独立 loader、独立轮询。
@@ -228,27 +216,27 @@ const vps = {
 
 ## 技术栈
 
-| 项 | 选型 |
-|----|------|
-| 框架 | Next.js 16 + React 19 |
-| 样式 | Tailwind CSS 4 |
-| 部署 | `output: "export"` 静态导出 |
-| 包管理 | pnpm |
-| 后端 | Node.js `http`（独立仓库） |
-| 网络 | Tailscale |
-| 存储 | JSON 文件 |
+| 项     | 选型                        |
+| ------ | --------------------------- |
+| 框架   | Next.js 16 + React 19       |
+| 样式   | Tailwind CSS 4              |
+| 部署   | `output: "export"` 静态导出 |
+| 包管理 | pnpm                        |
+| 后端   | Node.js `http`（独立仓库）  |
+| 网络   | Tailscale                   |
+| 存储   | JSON 文                     |
 
 ---
 
 ## 路线图
 
-| 版本 | 目标 |
-|------|------|
+| 版本     | 目标                                          |
+| -------- | --------------------------------------------- |
 | **v0.1** | 单服务器 ASCII HUD + 可插拔数据层 + mock 开发 |
-| v0.2 | live 联调稳定、WE 正式部署、背景图 |
-| v0.3 | 服务列表面板（阶段二） |
-| v0.4 | Git 活动面板（阶段三） |
-| v1.0 | 日志 + AI 日报 + 长期统计 |
+| v0.2     | live 联调稳定、WE 正式部署、背景图            |
+| v0.3     | 服务列表面板（阶段二）                        |
+| v0.4     | Git 活动面板（阶段三）                        |
+| v1.0     | 日志 + AI 日报 + 长期统计(待定)               |
 
 ---
 
