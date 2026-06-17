@@ -36,3 +36,13 @@ body {
   color: rgba(255, 255, 255, 0.88);
   text-shadow: 0 0 12px rgba(255, 255, 255, 0.08);
 }
+
+/* 左下仿终端：按 2×2 象限布局缩放字号，铺满第三象限（不依赖 container queries） */
+.ascii-terminal__pre {
+  width: 100%;
+  font-size: min(
+    calc((100vw - 4rem) / 2 / var(--terminal-cols, 54)),
+    calc((100vh - 4rem) / 2 / var(--terminal-lines, 32) / 1.35)
+  );
+  line-height: 1.35;
+}
